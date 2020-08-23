@@ -1,0 +1,50 @@
+
+provider "proxmox" {
+    pm_api_url = "https://10.55.10.21:8006/api2/json"
+    pm_user = "terraformer@pve"
+    pm_password = "9GeTqc%3X!6XoL3qlsmM"
+    pm_tls_insecure = "true"
+}
+
+resource "proxmox_vm_qemu" "proxmox_vm" {
+	bios				= "ovmf"
+	bootdisk			= "scsi0"
+	clone				= "WorkstationTemplate"	
+	cores				= 1
+	count				= 1
+	cpu					= "host"
+	memory				= 1024
+	name				= "Workstation${count.index}"
+	os_type				= "cloud-init"
+	pool				= "Administration"
+	target_node			= "cis-ccdc-gw"
+	scsihw				= "virtio-scsi-pci"
+	sockets				= "1"
+
+	disk {
+		id              = 0
+		size            = 32
+		type            = "scsi"
+		storage         = "local-lvm"
+		storage_type    = "lvm"
+		iothread        = true
+	}
+	
+	network {
+		id              = 0
+		model           = "virtio"
+		bridge          = "vmbr0"
+	}
+	
+	# Cloud Init Settings (Change the IP range and the GW to suit your needs)
+	ipconfig0 = "ip=10.10.10.15${count.index + 1}/24,gw=10.10.10.1"
+
+}
+
+#count     <- This states the amount of VMs to be created
+#name      <- This states the VM Name, the "${count.index}" allows you to create more than one VM and it'll just count from then e.g.: tf-vm-1, tf-vm-2, tf-vm-3, etc.
+#cores     <- The amount of cores that the VM will have
+#memory    <- The amount of RAM the VM will have
+#disk      <- The disk definitions for the VM, scale the size here.
+#network   <- The network bridge definition to be used.
+#ipconfig0 <- The Ip for the VM, the "${count.index}" allows you to create more than one VM and it'll just count from then e.g.: 10.10.10.151, 10.10.10.152, etc.

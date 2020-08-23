@@ -1,0 +1,28 @@
+For a more detailed set of instructions visit: https://medium.com/swlh/provision-proxmox-vms-with-terraform-quick-and-easy-5ad1975df1de
+
+Step 1:
+Install Terraform - https://www.terraform.io/downloads.html
+Follow Instructions on the website.
+(Make sure to move terraform.exe to a folder in PATH)
+
+Step 2:
+Install go - https://golang.org
+
+Step 3:
+Install the Proxmox Provider and Provisioner as a plugin for Terraform  - 
+https://github.com/Telmate/terraform-provider-proxmox/tree/master/cmd
+
+Step 4:
+In %APPDATA%/terraform.d , create a directory named "plugins".
+Move the Provider and Provisioner executables to "plugins".
+
+Step 5: 
+Create a cloud-init vm template on proxmox
+
+Step 6:
+Create a project folder and create a config file.
+
+Step 7:
+In cmd, go to the project folder and run "terraform init", 
+then "terraform plan -out planfile".
+If everything looks good, run "terraform apply "planfile"".
